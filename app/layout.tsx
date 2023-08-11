@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/Theme-Provider";
+import ModalProvider from "@/providers/Modal-Provider";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={openSans.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <ModalProvider />
           {children}
         </ThemeProvider>
       </body>

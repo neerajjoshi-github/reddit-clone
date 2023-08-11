@@ -1,5 +1,6 @@
 import SideNavBar from "@/components/SideNavBar";
 import Navbar from "@/components/Navbar";
+import CommunitiesMenu from "@/components/CommunitiesMenu";
 
 export default function RootLayout({
   children,
@@ -9,10 +10,10 @@ export default function RootLayout({
   return (
     <>
       <Navbar />
-      <div className="flex w-full h-full">
-        <SideNavBar className="max-lg:hidden" />
-        {children}
-      </div>
+      <SideNavBar className="max-lg:hidden" />
+
+      {children}
+      <CommunitiesMenu />
     </>
   );
 }
