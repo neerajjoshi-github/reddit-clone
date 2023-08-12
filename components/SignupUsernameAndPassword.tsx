@@ -18,12 +18,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import useFormStore from "@/store/formStore";
+import { auth } from "../firebase/firebase.config";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { FIREBASE_ERRORS } from "../firebase/firebaseErrors";
 
 const usernamePasswordSchema = usernameSchema.merge(passwordSchema);
 
 const SignupUsernameAndPassword = () => {
   const authModal = useAuthModalStore();
   const formStore = useFormStore();
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const form = useForm<z.infer<typeof usernamePasswordSchema>>({
     resolver: zodResolver(usernamePasswordSchema),
@@ -34,15 +39,24 @@ const SignupUsernameAndPassword = () => {
     mode: "all",
   });
 
-  const onSubmit = (values: z.infer<typeof usernamePasswordSchema>) => {
-    // TODO Sign up user.
+  const onSubmit = async (values: z.infer<typeof usernamePasswordSchema>) => {
     if (!form.formState.isValid) {
-      return form.setError("root", {
+      return form.setError("password", {
         type: "required",
         message: "Missing fields.",
       });
     }
-    console.log(values, formStore.email);
+    await createUserWithEmailAndPassword(formStore.email, values.password);
+    if (error) {
+      return form.setError("password", {
+        message: FIREBASE_ERRORS[error.message as keyof typeof FIREBASE_ERRORS],
+      });
+    }
+    if (!error && !loading) {
+      formStore.setEmail("");
+      authModal.changeView("signup");
+      form.reset();
+    }
   };
   return (
     <Form {...form}>
@@ -92,7 +106,11 @@ const SignupUsernameAndPassword = () => {
             )}
           />
 
-          <Button disabled={!form.formState.isValid} className="rounded-full">
+          <Button
+            disabled={!form.formState.isValid || loading}
+            isLoading={loading}
+            className="rounded-full"
+          >
             Continue
           </Button>
         </div>

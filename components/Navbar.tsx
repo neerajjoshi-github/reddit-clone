@@ -8,10 +8,15 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import useGetAppModalStore from "@/store/getAppModalStore";
 import useAuthModalStore from "@/store/AuthModalStrore";
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase.config";
 
 interface NavbarProps {}
 
 const Navbar: FC<NavbarProps> = ({}) => {
+  const [user, loading, error] = useAuthState(auth);
+  const [signOut, signOutLoading, signOutError] = useSignOut(auth);
+  console.log(user);
   const getAppModal = useGetAppModalStore();
   const authModal = useAuthModalStore();
   return (
@@ -53,10 +58,15 @@ const Navbar: FC<NavbarProps> = ({}) => {
           <BsQrCodeScan className="mr-2" size={18} />
           Get App
         </Button>
-
-        <Button onClick={authModal.toggle} className="rounded-full">
-          Log In
-        </Button>
+        {user ? (
+          <Button onClick={() => signOut()} className="rounded-full">
+            Log Out
+          </Button>
+        ) : (
+          <Button onClick={authModal.toggle} className="rounded-full">
+            Log In
+          </Button>
+        )}
       </div>
     </div>
   );

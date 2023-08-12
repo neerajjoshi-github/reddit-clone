@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "./Modal";
 import useAuthModalStore from "@/store/AuthModalStrore";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { Input } from "./ui/input";
 import Login from "./Login";
 import Signup from "./Signup";
 import ResetPassword from "./ResetPassword";
 import SignupUsernameAndPassword from "./SignupUsernameAndPassword";
-
+import { useSignInWithGoogle, useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase.config";
 const AuthModal = () => {
+  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+  const [userSate, userSatetLoading, userStateError] = useAuthState(auth);
+
   const authModal = useAuthModalStore();
+
+  useEffect(() => {
+    authModal.close();
+  }, [userSate]);
   return (
     <Modal
       isOpen={authModal.isOpen}
@@ -34,7 +41,12 @@ const AuthModal = () => {
           </p>
 
           <div className="flex flex-col gap-5 mt-8">
-            <Button variant="outline">
+            <Button
+              isLoading={loading}
+              disabled={loading}
+              onClick={() => signInWithGoogle()}
+              variant="outline"
+            >
               <Image
                 className="object-cover "
                 src="/images/googlelogo.png"
