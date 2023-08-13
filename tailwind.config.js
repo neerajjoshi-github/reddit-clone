@@ -16,9 +16,13 @@ module.exports = {
       },
     },
     extend: {
+      gridTemplateColumns: {
+        14: "repeat(14, minmax(0, 1fr))",
+      },
       colors: {
         mutedText: "#658480",
         whitesmoke: "#F5F5F5",
+        borderPrimary: "rgb(75 85 90)",
 
         // shadcn
         border: "hsl(var(--border))",

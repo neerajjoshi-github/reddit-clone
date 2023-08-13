@@ -10,10 +10,12 @@ export default function RootLayout({
   return (
     <>
       <Navbar />
-      <SideNavBar className="max-lg:hidden" />
-
-      {children}
-      <CommunitiesMenu />
+      <div className="flex justify-center">
+        <div className="flex w-[1350px] max-w-[1350px]">
+          <SideNavBar className="sticky top-[64px] right-0 max-xl:hidden" />
+          <div className="pt-[64px] w-full">{children}</div>
+        </div>
+      </div>
     </>
   );
 }
