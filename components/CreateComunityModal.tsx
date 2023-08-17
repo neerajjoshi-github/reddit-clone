@@ -1,27 +1,35 @@
-import React from "react";
-import Modal from "./Modal";
-import useCreateCommunityStore from "@/store/CreateCommunityModalStore";
-import { Label } from "@radix-ui/react-label";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { BiSolidUser, BiSolidLockAlt } from "react-icons/bi";
+import { auth, firestoreDb } from "@/firebase/firebase.config";
+import useCreateCommunityStore from "@/store/CreateCommunityModalStore";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useForm } from "react-hook-form";
+import { BiSolidLockAlt, BiSolidUser } from "react-icons/bi";
 import { VscEye } from "react-icons/vsc";
-import { Checkbox } from "@/components/ui/checkbox";
+import * as z from "zod";
+import Modal from "./Modal";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const communityTypeOptions = [
+const privacyTypeOptions = [
   {
     value: "public",
     icon: BiSolidUser,
@@ -43,40 +51,85 @@ const communityTypeOptions = [
   },
 ] as const;
 
-type CommunityTypeOptionsType = (typeof communityTypeOptions)[number]["value"];
+type PrivacyTypeOptionsType = (typeof privacyTypeOptions)[number]["value"];
 
-const CommunityTypeValues: [
-  CommunityTypeOptionsType,
-  ...CommunityTypeOptionsType[]
-] = [
-  communityTypeOptions[0].value,
-  ...communityTypeOptions.slice(1).map((p) => p.value),
-];
+const privacyTypeValues: [PrivacyTypeOptionsType, ...PrivacyTypeOptionsType[]] =
+  [
+    privacyTypeOptions[0].value,
+    ...privacyTypeOptions.slice(1).map((p) => p.value),
+  ];
 
 const communityFormSchema = z.object({
   name: z
     .string()
-    .min(3, { message: "Community name should be between 3 to 50 charaters" })
-    .max(50, { message: "Community name should be between 3 to 50 charaters" }),
-  communityType: z.enum(CommunityTypeValues),
+    .min(3, { message: "Community name should be between 3 to 21 charaters" })
+    .max(21, {
+      message: "Community name should be between 3 to 21 charaters",
+    }),
+  privacyType: z.enum(privacyTypeValues),
   isNSFW: z.boolean(),
 });
 
 const CreateComunityModal = () => {
+  const [user] = useAuthState(auth);
   const createCommunityModal = useCreateCommunityStore();
+  const [isloading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof communityFormSchema>>({
     resolver: zodResolver(communityFormSchema),
     defaultValues: {
       name: "",
-      communityType: "public",
+      privacyType: "public",
       isNSFW: false,
     },
   });
 
-  function onSubmit(values: z.infer<typeof communityFormSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof communityFormSchema>) => {
+    setIsLoading(true);
+    try {
+      const communityRef = doc(firestoreDb, "communities", values.name);
+
+      await runTransaction(firestoreDb, async (transaction) => {
+        // Checking if community already exist
+        const communityDoc = await transaction.get(communityRef);
+        if (communityDoc.exists()) {
+          form.setError("name", {
+            message: `Sorry, r/${values.name} is taken. Try another`,
+          });
+          return setIsLoading(false);
+        }
+
+        // Creating community
+        transaction.set(communityRef, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfMembers: 1,
+          privacyType: values.privacyType,
+          isNSFW: values.isNSFW,
+        });
+
+        // Creating community snnippet on user doc
+        transaction.set(
+          doc(firestoreDb, `users/${user?.uid}/communitySnippets`, values.name),
+          {
+            communityId: values.name,
+            isModerator: true,
+          }
+        );
+      });
+      createCommunityModal.close();
+      router.push(`/r/${values.name}`);
+      form.reset();
+    } catch (e: any) {
+      console.error("Error adding document: ", e);
+      form.setError("isNSFW", {
+        message: "Something went wrong please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <Modal
       title="Create Community"
@@ -93,20 +146,34 @@ const CreateComunityModal = () => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">Name</FormLabel>
+                <FormLabel className="text-base !text-white">Name</FormLabel>
                 <FormControl>
                   <div className="border-2 border-borderPrimary flex items-center rounded-md px-2">
                     <span className="text-mutedText">r/</span>
-                    <Input className="bg-transparent" {...field} />
+                    <Input
+                      max={21}
+                      maxLength={21}
+                      className="bg-transparent"
+                      {...field}
+                    />
                   </div>
                 </FormControl>
-                <FormMessage />
+                <p
+                  className={`${
+                    form.watch("name").length === 21
+                      ? "text-red-600"
+                      : "text-mutedText"
+                  } text-xs`}
+                >
+                  {21 - form.watch("name").length} Characters remaining
+                </p>
+                <FormMessage className="left-0" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="communityType"
+            name="privacyType"
             render={({ field }) => (
               <FormItem className="space-y-3">
                 <FormLabel className="text-base">Community type</FormLabel>
@@ -116,9 +183,12 @@ const CreateComunityModal = () => {
                     defaultValue={field.value}
                     className="flex flex-col space-y-1"
                   >
-                    {communityTypeOptions.map((option) => {
+                    {privacyTypeOptions.map((option) => {
                       return (
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem
+                          key={option.value}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
                           <FormControl>
                             <RadioGroupItem value={option.value} />
                           </FormControl>
@@ -174,7 +244,13 @@ const CreateComunityModal = () => {
             >
               Close
             </Button>
-            <Button variant="reverse">Create Community</Button>
+            <Button
+              variant="reverse"
+              isLoading={isloading}
+              disabled={isloading}
+            >
+              Create Community
+            </Button>
           </div>
         </form>
       </Form>

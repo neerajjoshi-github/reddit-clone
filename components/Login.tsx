@@ -42,7 +42,7 @@ const Login = () => {
 
     await signInWithEmailAndPassword(values.email, values.password);
 
-    if (error || !user) {
+    if (error) {
       return form.setError("password", {
         message:
           FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS] ||

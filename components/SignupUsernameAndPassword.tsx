@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { AiOutlineArrowLeft } from "react-icons/ai";
@@ -18,16 +18,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import useFormStore from "@/store/formStore";
-import { auth } from "../firebase/firebase.config";
+import { auth, firestoreDb } from "../firebase/firebase.config";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { FIREBASE_ERRORS } from "../firebase/firebaseErrors";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 const usernamePasswordSchema = usernameSchema.merge(passwordSchema);
 
 const SignupUsernameAndPassword = () => {
   const authModal = useAuthModalStore();
   const formStore = useFormStore();
-  const [createUserWithEmailAndPassword, user, loading, error] =
+  const [createUserWithEmailAndPassword, userCred, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
   const form = useForm<z.infer<typeof usernamePasswordSchema>>({
@@ -46,18 +47,34 @@ const SignupUsernameAndPassword = () => {
         message: "Missing fields.",
       });
     }
-    await createUserWithEmailAndPassword(formStore.email, values.password);
-    if (error) {
+
+    const user = await createUserWithEmailAndPassword(
+      formStore.email,
+      values.password
+    );
+
+    if (error || !user) {
       return form.setError("password", {
-        message: FIREBASE_ERRORS[error.message as keyof typeof FIREBASE_ERRORS],
+        message:
+          FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS] ||
+          "Something went wrong!!",
       });
     }
-    if (!error && !loading) {
-      formStore.setEmail("");
-      authModal.changeView("signup");
-      form.reset();
-    }
+
+    const userDataToStore = {
+      username: values.username,
+      email: user.user.email,
+      profileImage: user.user.photoURL,
+    };
+
+    const userDocRef = doc(firestoreDb, "users", user.user.uid);
+
+    await setDoc(userDocRef, userDataToStore);
+    formStore.setEmail("");
+    authModal.close();
+    form.reset();
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>

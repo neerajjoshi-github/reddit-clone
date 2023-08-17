@@ -9,15 +9,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { User } from "firebase/auth";
 import { BsChevronDown } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
+import { useSignOut } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase.config";
+import { User } from "@/store/userStore";
 
 type UserMenuProps = {
   user: User;
 };
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
+  const [signOut, loading, error] = useSignOut(auth);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -34,7 +37,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             />
           </div>
           <div className="max-md:hidden">
-            <p className="text-xs">{user.email}</p>
+            <p className="text-xs">{user.username || user.email}</p>
           </div>
           <BsChevronDown size={22} className="px-1" />
         </Button>
@@ -44,7 +47,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={signOut}>
           <div className="flex items-center gap-2">
             <BiLogOut size={22} />
             <span>Logout</span>

@@ -1,6 +1,6 @@
-"use client";
+// ! Calling auth state change at 2 places should not do that auth and layout
+
 import Image from "next/image";
-import { FC } from "react";
 import { BsSearch, BsQrCodeScan } from "react-icons/bs";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -8,17 +8,14 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import useGetAppModalStore from "@/store/getAppModalStore";
 import useAuthModalStore from "@/store/AuthModalStrore";
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase.config";
 import { BsBell } from "react-icons/bs";
 import { VscAdd } from "react-icons/vsc";
 import UserMenu from "./UserMenu";
 import useCreateCommunityStore from "@/store/CreateCommunityModalStore";
+import useUserStore from "@/store/userStore";
 
-interface NavbarProps {}
-
-const Navbar: FC<NavbarProps> = ({}) => {
-  const [user, loading, error] = useAuthState(auth);
+const Navbar = () => {
+  const user = useUserStore().user;
   const getAppModal = useGetAppModalStore();
   const authModal = useAuthModalStore();
   const createCommunityModal = useCreateCommunityStore();
@@ -59,14 +56,14 @@ const Navbar: FC<NavbarProps> = ({}) => {
             onClick={createCommunityModal.open}
             variant="secondary"
             className="bg-transparent px-2 hover:bg-secondary"
-            name="Create Post"
+            title="Create Post"
           >
             <VscAdd size={20} />
           </Button>
           <Button
             variant="secondary"
             className="bg-transparent px-2 hover:bg-secondary"
-            name="Notifications"
+            title="Notifications"
           >
             <BsBell size={20} />
           </Button>

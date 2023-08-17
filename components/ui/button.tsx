@@ -64,7 +64,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <BiLoaderAlt size={24} className="animate-spin text-white" />
+          <BiLoaderAlt
+            size={24}
+            className={`${
+              variant === "reverse" ? "text-black" : "text-white"
+            } animate-spin`}
+          />
         ) : (
           children
         )}

@@ -8,16 +8,32 @@ import Signup from "./Signup";
 import ResetPassword from "./ResetPassword";
 import SignupUsernameAndPassword from "./SignupUsernameAndPassword";
 import { useSignInWithGoogle, useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase.config";
+import { auth, firestoreDb } from "../firebase/firebase.config";
+import { User } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 const AuthModal = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
-  const [userSate, userSatetLoading, userStateError] = useAuthState(auth);
+  const [signInWithGoogle, userCred, loading, error] =
+    useSignInWithGoogle(auth);
 
   const authModal = useAuthModalStore();
 
-  useEffect(() => {
+  const createUserDocument = async (user: User) => {
+    const userDocRef = doc(firestoreDb, "users", user.uid);
+    const userDataToStore = {
+      email: user.email,
+      username: user.displayName,
+      profileImage: user.photoURL,
+    };
+    await setDoc(userDocRef, userDataToStore);
     authModal.close();
-  }, [userSate]);
+  };
+
+  useEffect(() => {
+    if (userCred) {
+      createUserDocument(userCred.user);
+    }
+  }, [userCred]);
+
   return (
     <Modal
       isOpen={authModal.isOpen}
