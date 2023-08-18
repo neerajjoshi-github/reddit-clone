@@ -16,7 +16,7 @@ const filtersOption = [
 const FiltersSection = () => {
   const [selectedFilter, setSelectedFilter] = useState("best");
   return (
-    <div className="w-full p-2 bg-secondary flex items-center gap-2 rounded-md border border-borderPrimary">
+    <div className="w-full p-2 flex items-center gap-2 rounded-md border border-borderPrimary">
       <RadioGroup
         onValueChange={(e) => setSelectedFilter(e)}
         className="flex gap-1 items-center"
@@ -34,9 +34,9 @@ const FiltersSection = () => {
                 htmlFor={filter.value}
                 className={`${
                   selectedFilter === filter.value
-                    ? "bg-slate-700"
+                    ? "bg-secondary"
                     : "text-mutedText"
-                } flex gap-1 rounded-full  items-center py-2 px-3 cursor-pointer`}
+                } flex gap-1 rounded-full items-center py-2 px-3 cursor-pointer hover:bg-secondary transition duration-200`}
               >
                 <filter.icon size={18} />
                 <span className="font-bold">{filter.title}</span>

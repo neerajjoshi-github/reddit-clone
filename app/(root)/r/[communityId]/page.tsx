@@ -12,6 +12,7 @@ import Seprator from "@/components/Seprator";
 import { PiCakeDuotone } from "react-icons/pi";
 import { formatTimestamp } from "@/lib/utils";
 import JoinButton from "@/components/JoinButton";
+import Posts from "@/components/Posts";
 
 const fetchCommunityData = async (communityId: string) => {
   try {
@@ -39,18 +40,7 @@ const page = async ({ params }: { params: { communityId: string } }) => {
             <CreatePostSection />
             <FiltersSection />
             {/* POST SECTION */}
-            <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-              SECTION 1
-            </div>
-            <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-              SECTION 2
-            </div>
-            <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-              SECTION 3
-            </div>
-            <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-              SECTION 4
-            </div>
+            <Posts comuunityData={community} />
           </div>
           <div className="max-lg:hidden relative min-w-[300px] max-w-[300px] p-2  flex flex-col gap-4">
             <div className="sticky top-[72px] left-0 bg-[#04090a] w-full  rounded-lg">

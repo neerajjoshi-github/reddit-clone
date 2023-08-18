@@ -21,7 +21,7 @@ const SideNavBar: FC<SideNavBarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        `z-10  h-[calc(100dvh-64px)]  bg-background min-w-[250px] max-w-[250px] border-r border-gray-700 p-2 overflow-y-auto hidden-scrollbar`,
+        `z-10  h-[calc(100dvh-64px)]  bg-background min-w-[250px] max-w-[250px] border-r border-gray-700 px-4 py-2 overflow-y-auto hidden-scrollbar`,
         className
       )}
     >

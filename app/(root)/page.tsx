@@ -1,6 +1,7 @@
 import CommunitiesMenu from "@/components/CommunitiesMenu";
 import CreatePostSection from "@/components/CreatePostSection";
 import FiltersSection from "@/components/FiltersSection";
+import PostSkeleton from "@/components/PostSkeleton";
 
 export default function Home() {
   return (
@@ -9,18 +10,8 @@ export default function Home() {
         {/* POST SECTION */}
         <CreatePostSection />
         <FiltersSection />
-        <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-          SECTION 1
-        </div>
-        <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-          SECTION 2
-        </div>
-        <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-          SECTION 3
-        </div>
-        <div className="w-full h-[400px] bg-blue-50 text-xl text-black">
-          SECTION 4
-        </div>
+        <PostSkeleton />
+        <PostSkeleton />
       </div>
       <CommunitiesMenu />
     </main>
