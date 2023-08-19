@@ -8,6 +8,9 @@ import useCommunityStore, { CommunitySnippet } from "@/store/communityStore";
 import { useEffect } from "react";
 import { BiLoader } from "react-icons/bi";
 import useUserStore, { User } from "@/store/userStore";
+import { Toaster } from "@/components/ui/toaster";
+import Image from "next/image";
+import usePostsStore, { PostVote } from "@/store/PostStore";
 
 export default function RootLayout({
   children,
@@ -17,18 +20,13 @@ export default function RootLayout({
   const [user, loading, error] = useAuthState(auth);
   const communityStore = useCommunityStore();
   const userStore = useUserStore();
+  const { setPostVotes } = usePostsStore();
 
   const handleAuthChange = async () => {
     console.log("RUNNING INSIDE AUTH HANDLE CHANGE");
     if (user) {
       console.log("USER EXIST", user.uid);
       try {
-        const snippetDocs = await getDocs(
-          collection(firestoreDb, `users/${user.uid}/communitySnippets`)
-        );
-        const snippets = snippetDocs.docs.map((doc) => ({ ...doc.data() }));
-        communityStore.setCommunitySnippets(snippets as CommunitySnippet[]);
-
         // User from firestore
         const userRef = doc(firestoreDb, "users", user.uid);
         const docSnap = await getDoc(userRef);
@@ -41,6 +39,21 @@ export default function RootLayout({
           };
           userStore.setUser(userData as User);
         }
+        // Community Snippets
+        const snippetDocs = await getDocs(
+          collection(firestoreDb, `users/${user.uid}/communitySnippets`)
+        );
+        const snippets = snippetDocs.docs.map((doc) => ({ ...doc.data() }));
+        communityStore.setCommunitySnippets(snippets as CommunitySnippet[]);
+
+        // Vote snippets
+        const votesDocs = await getDocs(
+          collection(firestoreDb, `users/${user.uid}/postVotes`)
+        );
+        const votesSnippets = votesDocs.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+        setPostVotes(votesSnippets as PostVote[]);
       } catch (error) {
         console.log(error);
       }
@@ -59,6 +72,7 @@ export default function RootLayout({
 
   return !loading ? (
     <>
+      <Toaster />
       <Navbar />
       <div className="flex justify-center">
         <div className="flex w-[1350px] max-w-[1350px]">
@@ -68,7 +82,13 @@ export default function RootLayout({
       </div>
     </>
   ) : (
-    <div className="w-full h-screen flex items-center justify-center">
+    <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
+      <Image
+        src="/images/redditFace.svg"
+        height={80}
+        width={80}
+        alt=" Reddit Logo Image"
+      />
       <BiLoader className="text-primary animate-spin" size={40} />
     </div>
   );

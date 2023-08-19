@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import useCreateCommunityStore from "@/store/CreateCommunityModalStore";
 
-const CommunitiesMenu = () => {
+const HomePageSidebar = () => {
   const createCommunityModal = useCreateCommunityStore();
   return (
     <div className="max-lg:hidden relative min-w-[300px] max-w-[300px] p-2  flex flex-col gap-4">
@@ -92,4 +92,4 @@ const CommunitiesMenu = () => {
   );
 };
 
-export default CommunitiesMenu;
+export default HomePageSidebar;

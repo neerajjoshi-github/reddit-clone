@@ -12,6 +12,7 @@ import {
 import { PiRedditLogo } from "react-icons/pi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { cn } from "@/lib/utils";
+import useCommunityStore from "@/store/communityStore";
 
 interface SideNavBarProps {
   className?: string;

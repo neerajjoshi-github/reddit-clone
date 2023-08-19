@@ -1,17 +1,20 @@
 "use client";
 import { firestoreDb } from "@/firebase/firebase.config";
 import usePostsStore, { PostType } from "@/store/PostStore";
-import { Community } from "@/store/communityStore";
+import useCommunityStore, { Community } from "@/store/communityStore";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { FC, useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import PostSkeleton from "./PostSkeleton";
+import Image from "next/image";
+import useUserStore from "@/store/userStore";
 
 type PostsProps = {
   comuunityData: Community;
 };
 
 const Posts: FC<PostsProps> = ({ comuunityData }) => {
+  const { user } = useUserStore();
   const [isLoading, setIsLoading] = useState(true);
   const { setPosts, posts } = usePostsStore();
   const getPosts = async () => {
@@ -22,7 +25,10 @@ const Posts: FC<PostsProps> = ({ comuunityData }) => {
         orderBy("createdAt", "desc")
       );
       const postDocs = await getDocs(postQuery);
-      const posts = postDocs.docs.map((doc) => doc.data());
+      const posts = postDocs.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+      console.log("POSTS IN GETPOSTS", posts);
       setPosts(posts as PostType[]);
     } catch (error) {
       console.log("Error while fetching posts ", error);
@@ -33,6 +39,7 @@ const Posts: FC<PostsProps> = ({ comuunityData }) => {
   useEffect(() => {
     getPosts();
   }, []);
+
   return (
     <>
       {isLoading ? (
@@ -41,7 +48,13 @@ const Posts: FC<PostsProps> = ({ comuunityData }) => {
           <PostSkeleton />
         </>
       ) : posts.length === 0 ? (
-        <div>
+        <div className="w-full flex flex-col items-center justify-center mt-8">
+          <Image
+            src="/images/reddit-full-body.png"
+            width={80}
+            height={80}
+            alt="Reddit Icon"
+          />
           <p>
             <span className="font-semibold">r/{comuunityData.id}</span> does not
             have any post.
@@ -49,13 +62,7 @@ const Posts: FC<PostsProps> = ({ comuunityData }) => {
         </div>
       ) : (
         posts.map((post) => (
-          <PostItem
-            post={post}
-            userIsCreator
-            onDelete={() => {}}
-            onSelectPost={() => {}}
-            onVote={() => {}}
-          />
+          <PostItem communityId={comuunityData.id} post={post} />
         ))
       )}
     </>

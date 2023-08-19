@@ -1,6 +1,4 @@
-import { auth, firestoreDb } from "@/firebase/firebase.config";
-import { Timestamp, collection, getDocs } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { Timestamp } from "firebase/firestore";
 import { create } from "zustand";
 
 export type Community = {
@@ -19,19 +17,25 @@ export type CommunitySnippet = {
   imageURl?: string;
 };
 
+export type RecentlyVisitedCommunity = {
+  id: string;
+  imageUrl?: string;
+};
+
 type CommunityState = {
   comuunitySnippets: CommunitySnippet[];
   setCommunitySnippets: (snippets: CommunitySnippet[]) => void;
-  toggleJoinCommunity: (communityData: Community) => void;
   addToCommunitySnippets: (communitySnippet: CommunitySnippet) => void;
   removeFromCommunitySnippets: (communityId: string) => void;
+  currentCommunity: Community | null;
+  setCurrentCommunity: (communityData: Community) => void;
+  recentlyVisitedCommunities: RecentlyVisitedCommunity[];
 };
 
 const useCommunityStore = create<CommunityState>()((set) => ({
   comuunitySnippets: [],
   setCommunitySnippets: (snippets) =>
     set(() => ({ comuunitySnippets: snippets })),
-  toggleJoinCommunity: (communityData) => {},
   addToCommunitySnippets: (communitySnippet) =>
     set((state) => ({
       comuunitySnippets: [...state.comuunitySnippets, communitySnippet],
@@ -42,6 +46,10 @@ const useCommunityStore = create<CommunityState>()((set) => ({
         (snippet) => snippet.communityId !== communityId
       ),
     })),
+  currentCommunity: null,
+  setCurrentCommunity: (communityData) =>
+    set(() => ({ currentCommunity: communityData })),
+  recentlyVisitedCommunities: [],
 }));
 
 export default useCommunityStore;

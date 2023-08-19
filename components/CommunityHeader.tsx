@@ -12,12 +12,14 @@ const CommunityHeader: FC<CommunityHeaderProps> = ({ community }) => {
     <div className="w-full flex gap-4 items-center">
       <div>
         {community.imageUrl ? (
-          <Image
-            src={community.imageUrl}
-            alt="Community Profile Image"
-            width={40}
-            height={40}
-          />
+          <div className="relative rounded-full w-20 h-20 mx-auto">
+            <Image
+              src={community.imageUrl}
+              fill
+              className="rounded-full object-cover"
+              alt="Community Profile Image"
+            />
+          </div>
         ) : (
           <div className="rounded-full w-14 h-14 bg-blue-500 border-[3px] border-white flex items-center justify-center">
             <span className="text-4xl font-bold">r/</span>
