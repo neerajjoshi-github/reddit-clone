@@ -1,12 +1,11 @@
 "use client";
-import SideNavBar from "@/components/SideNavBar";
-import Navbar from "@/components/Navbar";
+import SideNavBar from "@/components/Header/SideNavBar";
+import Navbar from "@/components/Header/Navbar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, firestoreDb } from "@/firebase/firebase.config";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import useCommunityStore, { CommunitySnippet } from "@/store/communityStore";
 import { useEffect } from "react";
-import { BiLoader } from "react-icons/bi";
 import useUserStore, { User } from "@/store/userStore";
 import { Toaster } from "@/components/ui/toaster";
 import Image from "next/image";
@@ -66,8 +65,8 @@ export default function RootLayout({
   };
 
   useEffect(() => {
-    console.log("HELLO RUNNING INSIDE THE USE EFFECT");
     handleAuthChange();
+    console.log("USER FROM AUTH CHANGE", user);
   }, [user]);
 
   return !loading ? (
@@ -77,19 +76,23 @@ export default function RootLayout({
       <div className="flex justify-center">
         <div className="flex w-[1350px] max-w-[1350px]">
           <SideNavBar className="sticky top-[64px] right-0 max-xl:hidden" />
-          <div className="pt-[64px] w-full">{children}</div>
+          <div className="pt-[64px] flex-1">{children}</div>
         </div>
       </div>
     </>
   ) : (
     <div className="w-full h-screen flex flex-col items-center justify-center gap-4">
-      <Image
-        src="/images/redditFace.svg"
-        height={80}
-        width={80}
-        alt=" Reddit Logo Image"
-      />
-      <BiLoader className="text-primary animate-spin" size={40} />
+      <div className="relative">
+        <div className="relative w-20 h-20">
+          <Image
+            src="/images/redditFace.svg"
+            fill
+            alt="Reddit Logo Image"
+            className="z-[10] animate-pulse"
+          />
+        </div>
+        <div className="z-[1] absolute top-0 left-0 animate-ping  bg-primary h-20 w-20 rounded-full"></div>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { create } from "zustand";
 
 export type PostType = {
   id: string;
-  communityId: string;
+  communityId: string | null;
   creatorId: string;
   creatorUsername: string;
   title: string;
@@ -21,21 +21,22 @@ export type PostType = {
 export type PostVote = {
   id: string;
   postId: string;
-  communityId: string;
   voteValue: number;
 };
 
 type PostState = {
-  selectedPost: PostType | null;
+  currentPost: PostType | null;
   posts: PostType[];
+  postVotes: PostVote[];
   setPosts: (posts: PostType[]) => void;
   removePost: (post: PostType) => void;
-  postVotes: PostVote[];
   setPostVotes: (postVotes: PostVote[]) => void;
+  setCurrentPost: (post: PostType) => void;
 };
 
 const usePostsStore = create<PostState>()((set) => ({
-  selectedPost: null,
+  currentPost: null,
+  setCurrentPost: (post) => set(() => ({ currentPost: post })),
   posts: [],
   setPosts: (posts) => set(() => ({ posts: posts })),
   removePost: (deletePost) =>

@@ -1,5 +1,5 @@
-import CommunitySidebar from "@/components/CommunitySidebar";
-import SidebarPageLayout from "@/components/SidebarPageLayout";
+import CommunitySidebar from "@/components/Community/CommunitySidebar";
+import SidebarPageLayout from "@/components/Layout/SidebarPageLayout";
 import { Button } from "@/components/ui/button";
 import { firestoreDb } from "@/firebase/firebase.config";
 import { Community } from "@/store/communityStore";

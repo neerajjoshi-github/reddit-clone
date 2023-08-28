@@ -2,10 +2,10 @@ import { firestoreDb } from "@/firebase/firebase.config";
 import { doc, getDoc } from "firebase/firestore";
 import React from "react";
 import useCommunityStore, { Community } from "@/store/communityStore";
-import CreatePostSection from "@/components/CreatePostSection";
-import FiltersSection from "@/components/FiltersSection";
-import CommunityHeader from "@/components/CommunityHeader";
-import Posts from "@/components/Posts";
+import CreatePostSection from "@/components/Sections/CreatePostSection";
+import FiltersSection from "@/components/Sections/FiltersSection";
+import CommunityHeader from "@/components/Community/CommunityHeader";
+import Posts from "@/components/Post/Posts";
 
 const fetchCommunityData = async (communityId: string) => {
   try {

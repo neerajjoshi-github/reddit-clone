@@ -5,6 +5,7 @@ export type User = {
   email: string;
   username: string;
   profileImage: string;
+  createdAt: string;
 };
 
 type UserState = {

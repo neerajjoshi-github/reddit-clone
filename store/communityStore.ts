@@ -9,6 +9,7 @@ export type Community = {
   isNSFW: boolean;
   createdAt?: Timestamp;
   imageUrl?: string;
+  name?: string;
 };
 
 export type CommunitySnippet = {

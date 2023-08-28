@@ -1,6 +1,5 @@
 import PostCommentSection from "@/components/Post/PostCommentSection";
 import PostItem from "@/components/Post/PostItem";
-import CurrentPostInitializator from "@/components/StoreInitializators/CurrentPostInitializator";
 import { firestoreDb } from "@/firebase/firebase.config";
 import { PostType } from "@/store/PostStore";
 import { doc, getDoc } from "firebase/firestore";
@@ -24,7 +23,7 @@ const getPostData = async (postId: string) => {
 const page = async ({
   params,
 }: {
-  params: { postId: string; communityId: string };
+  params: { postId: string; userId: string };
 }) => {
   if (!params.postId) return;
   const postData = await getPostData(params.postId);

@@ -1,5 +1,5 @@
-import CreatePost from "@/components/CreatePost";
-import Seprator from "@/components/Seprator";
+import CreatePost from "@/components/Post/CreatePost";
+import Seprator from "@/components/ui/Seprator";
 import React from "react";
 
 const page = ({ params }: { params: { communityId: string } }) => {

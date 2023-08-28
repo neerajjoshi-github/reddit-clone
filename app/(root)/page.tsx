@@ -1,21 +1,40 @@
-import HomePageSidebar from "@/components/HomePageSidebar";
-import CreatePostSection from "@/components/CreatePostSection";
-import FiltersSection from "@/components/FiltersSection";
-import PostSkeleton from "@/components/PostSkeleton";
-import SidebarPageLayout from "@/components/SidebarPageLayout";
+import HomePageSidebar from "@/components/Sidebars/HomePageSidebar";
+import CreatePostSection from "@/components/Sections/CreatePostSection";
+import FiltersSection from "@/components/Sections/FiltersSection";
+import SidebarPageLayout from "@/components/Layout/SidebarPageLayout";
+import { collection, getDocs } from "firebase/firestore";
+import { firestoreDb } from "@/firebase/firebase.config";
+import { PostType } from "@/store/PostStore";
+import PostItem from "@/components/Post/PostItem";
 
-export default function Home() {
+const fetchPosts = async () => {
+  try {
+    const postSnapshot = await getDocs(collection(firestoreDb, "posts"));
+    const posts = postSnapshot.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() };
+    });
+
+    return JSON.parse(JSON.stringify(posts)) as PostType[];
+  } catch (error) {
+    console.log("Error while getting post for home page", error);
+  }
+};
+
+const Home = async () => {
+  const posts = await fetchPosts();
+
   return (
     <SidebarPageLayout>
       <>
         <CreatePostSection />
         <FiltersSection />
-        <PostSkeleton />
-        <PostSkeleton />
+        {posts && posts.map((post) => <PostItem post={post} />)}
       </>
       <>
         <HomePageSidebar />
       </>
     </SidebarPageLayout>
   );
-}
+};
+
+export default Home;
