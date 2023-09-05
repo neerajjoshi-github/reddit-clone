@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { Input } from "../ui/input";
@@ -76,6 +77,7 @@ const Search: React.FC<SearchProps> = ({ className }) => {
             results.map((community, index) => {
               return (
                 <Link
+                  key={community.id}
                   href={`/r/${community.name}`}
                   className={`${
                     index !== 0 && "border-t border-borderPrimary"

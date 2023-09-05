@@ -46,7 +46,10 @@ const UserCommunities = async ({ userId }: UserCommnetsProps) => {
     <div className="w-full flex flex-col gap-4">
       {communities?.length !== 0 ? (
         communities?.map((community) => (
-          <div className="flex items-center gap-2 hover:bg-secondary cursor-pointer px-2 py-2 rounded-md">
+          <div
+            key={community.id}
+            className="flex items-center gap-2 hover:bg-secondary cursor-pointer px-2 py-2 rounded-md"
+          >
             <div className="relative w-16 h-16 rounded-full">
               <Image
                 src={community.imageUrl || "/images/redditPersonalHome.png"}

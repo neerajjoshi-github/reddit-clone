@@ -61,7 +61,7 @@ const Posts: FC<PostsProps> = ({ comuunityData }) => {
           </p>
         </div>
       ) : (
-        posts.map((post) => <PostItem post={post} />)
+        posts.map((post) => <PostItem key={post.id} post={post} />)
       )}
     </>
   );

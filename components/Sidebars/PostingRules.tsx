@@ -41,6 +41,7 @@ const PostingRules = () => {
           {rules.map((item, index) => {
             return (
               <li
+                key={item.id}
                 className={`${
                   index === 0 && "border-t"
                 } py-2 text-sm text-mutedText border-b border-borderPrimary`}

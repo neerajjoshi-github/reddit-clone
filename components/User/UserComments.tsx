@@ -32,7 +32,9 @@ const UserComments = async ({ userId }: UserCommnetsProps) => {
           hmm... user hasn't commented on anything
         </div>
       ) : (
-        comments?.map((comment) => <DetailComment comment={comment} />)
+        comments?.map((comment) => (
+          <DetailComment key={comment.id} comment={comment} />
+        ))
       )}
     </div>
   );

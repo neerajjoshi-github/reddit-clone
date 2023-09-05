@@ -44,7 +44,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         />
         {comment.replies.length !== 0 &&
           comment.replies.map((reply) => {
-            return <Comment comment={reply} />;
+            return <Comment key={reply.id} comment={reply} />;
           })}
       </div>
     </div>

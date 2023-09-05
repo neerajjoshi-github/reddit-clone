@@ -1,7 +1,6 @@
 import CreatePost from "@/components/Post/CreatePost";
 import PostingRules from "@/components/Sidebars/PostingRules";
 import SidebarPageLayout from "@/components/Layout/SidebarPageLayout";
-import React from "react";
 
 const page = () => {
   return (

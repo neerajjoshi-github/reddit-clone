@@ -136,6 +136,7 @@ const PostItem: FC<PostItemProps> = ({ post, isSingle = false }) => {
 
       setPostVotes(updatedPostVotes);
       setPosts(updatedPosts);
+      router.refresh();
     } catch (error) {
       console.log("Error while voting : ", error);
     }

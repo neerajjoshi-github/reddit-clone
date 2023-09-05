@@ -58,6 +58,7 @@ const HomePageSidebar = async () => {
             popularCommunities.map((community) => {
               return (
                 <Link
+                  key={community.id}
                   href={`/r/${community.name}`}
                   className="flex items-center gap-2 hover:bg-secondary cursor-pointer px-2 py-2 rounded-md"
                 >

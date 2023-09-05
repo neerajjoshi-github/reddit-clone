@@ -2,6 +2,7 @@ import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { FaBeer } from "@react-icons/all-files/fa/FaBeer";
 import useAuthModalStore from "@/store/AuthModalStrore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

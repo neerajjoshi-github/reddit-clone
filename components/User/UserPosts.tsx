@@ -31,7 +31,7 @@ const UserPosts = async ({ userId }: UserPostsProps) => {
           hmm... user hasn't posted anything
         </div>
       ) : (
-        posts?.map((post) => <PostItem post={post} />)
+        posts?.map((post) => <PostItem key={post.id} post={post} />)
       )}
     </div>
   );

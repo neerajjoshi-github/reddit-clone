@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { BsSearch, BsQrCodeScan } from "react-icons/bs";
 import { Button } from "../ui/button";
