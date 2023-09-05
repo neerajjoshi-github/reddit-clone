@@ -50,14 +50,13 @@ const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) => {
         setPostVotes(votesSnippets as PostVote[]);
       } catch (error) {
         console.log(error);
-      } finally {
-        setIsLoading(false);
       }
     } else {
       setCommunitySnippets([]);
       setPostVotes([]);
       setUser(null);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
