@@ -5,9 +5,10 @@ import useCommunityStore, { Community } from "@/store/communityStore";
 import CreatePostSection from "@/components/Sections/CreatePostSection";
 import FiltersSection from "@/components/Sections/FiltersSection";
 import CommunityHeader from "@/components/Community/CommunityHeader";
-import Posts from "@/components/Post/Posts";
+import CommunityPosts from "@/components/Post/CommunityPosts";
 
 const fetchCommunityData = async (communityId: string) => {
+  console.log("Hello fetch is runing in community page hula la");
   try {
     const communityDocRef = doc(firestoreDb, "communities", communityId);
     const communityDoc = await getDoc(communityDocRef);
@@ -33,8 +34,6 @@ const fetchCommunityData = async (communityId: string) => {
 
 const page = async ({ params }: { params: { communityId: string } }) => {
   const community = await fetchCommunityData(params.communityId);
-  const recent = useCommunityStore.getState().recentlyVisitedCommunities;
-  console.log("RECENTLY VISITED COMMUNITIES FROM STORE : ", recent);
 
   return (
     <>
@@ -43,8 +42,7 @@ const page = async ({ params }: { params: { communityId: string } }) => {
           <div className="flex-1 flex flex-col gap-4 overflow-auto">
             <CommunityHeader community={community} />
             <CreatePostSection />
-            <FiltersSection />
-            <Posts comuunityData={community} data-superjson />
+            <CommunityPosts comuunityData={community} data-superjson />
           </div>
         </main>
       )}

@@ -15,6 +15,8 @@ import { Community } from "@/store/communityStore";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import useSearchModalStore from "@/store/SearchModal";
 
 const fetchSearch = async (searchString: string) => {
   try {
@@ -42,6 +44,8 @@ type SearchProps = {
 };
 
 const Search: React.FC<SearchProps> = ({ className }) => {
+  const router = useRouter();
+  const searchModal = useSearchModalStore();
   const [results, setResults] = useState<Community[] | null>(null);
   const searchHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const communities = await fetchSearch(e.target.value);
@@ -57,6 +61,11 @@ const Search: React.FC<SearchProps> = ({ className }) => {
     fethcCommunities();
   }, []);
 
+  const handleRouting = (communityName: string) => {
+    router.push(`/r/${communityName}`);
+    searchModal.close();
+  };
+
   return (
     <div
       className={cn(
@@ -71,17 +80,17 @@ const Search: React.FC<SearchProps> = ({ className }) => {
         className="peer h-6 bg-transparent border-none"
       />
 
-      <div className="peer-focus:flex hidden flex-col p-2 absolute top-10 left-0 w-full min-h-[80px] bg-[#1a282d] border-t border-borderPrimary">
+      <div className="peer-focus:flex rounded-b-3xl hidden flex-col p-2 absolute top-10 left-0 w-full min-h-[80px] bg-[#1a282d] border-t border-borderPrimary">
         {results ? (
           results.length !== 0 ? (
             results.map((community, index) => {
               return (
-                <Link
-                  key={community.id}
-                  href={`/r/${community.name}`}
+                <div
+                  onMouseDown={() => handleRouting(community.name!)}
+                  key={community.name}
                   className={`${
                     index !== 0 && "border-t border-borderPrimary"
-                  } flex items-center gap-2 hover:bg-background cursor-pointer px-2 py-3 rounded-md`}
+                  }  flex items-center gap-2 hover:bg-background cursor-pointer px-2 py-3 rounded-md`}
                 >
                   <div className="relative w-8 h-8 rounded-full">
                     <Image
@@ -99,7 +108,7 @@ const Search: React.FC<SearchProps> = ({ className }) => {
                       {community.numberOfMembers} members
                     </p>
                   </div>
-                </Link>
+                </div>
               );
             })
           ) : (

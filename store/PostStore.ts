@@ -1,6 +1,4 @@
-import { firestoreDb, storage } from "@/firebase/firebase.config";
-import { Timestamp, deleteDoc, doc } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
+import { Timestamp } from "firebase/firestore";
 import { create } from "zustand";
 
 export type PostType = {

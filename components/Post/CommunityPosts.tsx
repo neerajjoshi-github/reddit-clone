@@ -8,40 +8,47 @@ import PostItem from "./PostItem";
 import PostSkeleton from "../LodingSkeleton/PostSkeleton";
 import Image from "next/image";
 import useUserStore from "@/store/userStore";
+import FiltersSection from "../Sections/FiltersSection";
 
 type PostsProps = {
   comuunityData: Community;
 };
 
-const Posts: FC<PostsProps> = ({ comuunityData }) => {
+const CommunityPosts: FC<PostsProps> = ({ comuunityData }) => {
   const { user } = useUserStore();
   const [isLoading, setIsLoading] = useState(true);
   const { setPosts, posts } = usePostsStore();
+  const [selectedFilter, setSelectedFilter] = useState("createdAt");
   const getPosts = async () => {
     try {
       const postQuery = query(
         collection(firestoreDb, "posts"),
         where("communityId", "==", comuunityData.id),
-        orderBy("createdAt", "desc")
+        orderBy(selectedFilter, "desc")
       );
       const postDocs = await getDocs(postQuery);
       const posts = postDocs.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
-      console.log("POSTS IN GETPOSTS", posts);
       setPosts(posts as PostType[]);
     } catch (error) {
-      console.log("Error while fetching posts ", error);
+      console.log("Error while fetching posts in community ", error);
     } finally {
       setIsLoading(false);
     }
   };
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [selectedFilter]);
+
+  console.log("HELLLO HELLLO HELLO HELLO : :: :: :: : :", { selectedFilter });
 
   return (
     <>
+      <FiltersSection
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+      />
       {isLoading ? (
         <>
           <PostSkeleton />
@@ -67,4 +74,4 @@ const Posts: FC<PostsProps> = ({ comuunityData }) => {
   );
 };
 
-export default Posts;
+export default CommunityPosts;
