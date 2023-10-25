@@ -1,34 +1,99 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Reddit Clone App
 
-## Getting Started
+Welcome to the Reddit Clone App Repo! This is a web application built with Next.js and Firebase, designed to mimic the popular platform Reddit. It provides a platform for users to post, comment, create community and upvote/downvote content.
 
-First, run the development server:
+# Demo
+
+Check out the live demo deployed on Vercel: [Reddit Clone](https://reddit-clone-weld-rho.vercel.app/)
+
+## Table of Contents
+
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Technologies](#technologies)
+
+# Features
+
+The Reddit Clone App comes with the following features:
+
+## Features
+
+The Reddit Clone App comes with the following features:
+
+- **User registration and authentication**: Users can create accounts and log in using their credentials.
+- **Posting text, links, and images**: Users can create posts, including text-based content, links, and images.
+- **Commenting on posts**: Users can engage in discussions by commenting on posts.
+- **Upvoting and downvoting posts**: Users can express their opinions by upvoting or downvoting posts.
+- **Searching for subreddits**: Users can search for specific subreddits.
+- **User Profile**: Users can visit their profile page to get information about what they have posted, commented and communities they were invovled in.
+
+## Screenshots
+
+### Desktop View
+
+![Desktop View Screenshot](/public/images/readme/1.png)
+
+![Desktop View Screenshot](/public/images/readme/2.png)
+
+![Desktop View Screenshot](/public/images/readme/3.png)
+
+## Run Locally
+
+To run this project locally, follow these steps:
+
+1. Clone the repository to your local machine:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+  git clone https://github.com/neerajjoshi-github/reddit-clone.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd reddit-clone
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. Install the project dependencies:
 
-## Learn More
+```bash
+  npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Configure Environment Variables:
+   Create a `.env.local` file in the root directory and add your environment variables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   You can find all these firebase env from your firebase console.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+```
 
-## Deploy on Vercel
+5. Run the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+ npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+6. Open your browser and visit [http://localhost:3000](http://localhost:3000) to view the app.
+
+## Technologies
+
+The Reddit Clone App is built using the following technologies:
+
+- **Next.js**: A React framework for building server-rendered React applications.
+- **Firebase**: A cloud-based platform for building web and mobile applications.
+- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
+- **React Hook Form**: A library for managing form state and validation.
+- **Zustand**: A state management library for React.
+- **TypeScript**: A typed superset of JavaScript that enhances development productivity and code quality.
+- **...and more**: Various other libraries and tools, see `package.json` for a complete list.
+
+## If there are any issues with the project, please let me know..
+
+# Thank you for checking out this project.
