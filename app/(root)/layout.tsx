@@ -9,8 +9,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log("ROOT LAYOUT");
-
   return (
     <UserDataProvider>
       <Toaster />

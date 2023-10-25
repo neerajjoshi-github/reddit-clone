@@ -1,6 +1,5 @@
 import PostCommentSection from "@/components/Post/PostCommentSection";
 import PostItem from "@/components/Post/PostItem";
-import CurrentPostInitializator from "@/components/StoreInitializators/CurrentPostInitializator";
 import { firestoreDb } from "@/firebase/firebase.config";
 import { PostType } from "@/store/PostStore";
 import { doc, getDoc } from "firebase/firestore";

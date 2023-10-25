@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { ThemeProvider } from "@/providers/Theme-Provider";
 import ModalProvider from "@/providers/Modal-Provider";
-import UserDataProvider from "@/providers/UserData-Provider";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -22,9 +21,7 @@ export default function RootLayout({
       <body className={openSans.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <ModalProvider />
-          {/* <UserDataProvider> */}
           {children}
-          {/* </UserDataProvider> */}
         </ThemeProvider>
       </body>
     </html>

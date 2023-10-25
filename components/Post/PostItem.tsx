@@ -143,15 +143,17 @@ const PostItem: FC<PostItemProps> = ({ post, isSingle = false }) => {
   };
 
   const shareHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("Shared link start!!!");
     e.stopPropagation();
     navigator.clipboard.writeText(
-      `${window.location.origin}/r/${post.communityId}/comment/${post.id}`
+      `${window.location.origin}/${
+        post.communityId
+          ? `r/${post.communityId}/comment`
+          : `user/${post.creatorId}/comments`
+      }/${post.id}`
     );
     toast({
       description: "Post link copied to clipboard!!",
     });
-    console.log("Shared link end!!!");
   };
 
   const onClickHandler = () => {
